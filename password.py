@@ -1,57 +1,43 @@
-import re
+def encrypt(text, shift):
+    encrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            shift_amount = 65 if char.isupper() else 97
+            encrypted_char = chr((ord(char) - shift_amount + shift) % 26 + shift_amount)
+            encrypted_text += encrypted_char
+        else:
+            encrypted_text += char
+    return encrypted_text
 
-def assess_password_strength(password):
-    # Criteria for a strong password
-    min_length = 8
-    criteria = {
-        'length': len(password) >= min_length,
-        'uppercase': bool(re.search(r'[A-Z]', password)),
-        'lowercase': bool(re.search(r'[a-z]', password)),
-        'digits': bool(re.search(r'\d', password)),
-        'special_chars': bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
-    }
+def decrypt(text, shift):
+    decrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            shift_amount = 65 if char.isupper() else 97
+            decrypted_char = chr((ord(char) - shift_amount - shift) % 26 + shift_amount)
+            decrypted_text += decrypted_char
+        else:
+            decrypted_text += char
+    return decrypted_text
 
-    # Calculate strength score
-    strength_score = sum(criteria.values())
+def main():
+    while True:
+        choice = input("Type 'e' to encrypt, 'd' to decrypt, or 'q' to quit: ").lower()
+        if choice == 'q':
+            break
+        if choice not in ['e', 'd']:
+            print("Invalid choice, please try again.")
+            continue
 
-    # Determine strength level
-    if strength_score == 5:
-        strength_level = 'Very Strong'
-    elif strength_score == 4:
-        strength_level = 'Strong'
-    elif strength_score == 3:
-        strength_level = 'Moderate'
-    elif strength_score == 2:
-        strength_level = 'Weak'
-    else:
-        strength_level = 'Very Weak'
+        message = input("Enter the message: ")
+        shift = int(input("Enter the shift value: "))
 
-    # Provide feedback
-    feedback = []
-    if not criteria['length']:
-        feedback.append(f'Password should be at least {min_length} characters long.')
-    if not criteria['uppercase']:
-        feedback.append('Password should contain at least one uppercase letter.')
-    if not criteria['lowercase']:
-        feedback.append('Password should contain at least one lowercase letter.')
-    if not criteria['digits']:
-        feedback.append('Password should contain at least one digit.')
-    if not criteria['special_chars']:
-        feedback.append('Password should contain at least one special character.')
+        if choice == 'e':
+            result = encrypt(message, shift)
+            print(f"Encrypted message: {result}")
+        elif choice == 'd':
+            result = decrypt(message, shift)
+            print(f"Decrypted message: {result}")
 
-    return strength_level, feedback
-
-# Prompt the user to enter their password
-password = input("Enter your password to assess its strength: ")
-
-# Assess the strength of the entered password
-strength_level, feedback = assess_password_strength(password)
-
-# Display the results
-print(f"Password Strength: {strength_level}")
-if feedback:
-    print("Feedback to improve your password:")
-    for item in feedback:
-        print(f"- {item}")
-else:
-    print("Your password is very strong.")
+if __name__ == "__main__":
+    main()
